@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.raiiiden.doomsdayfunctionality.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mixins.doomsday_functionality.refmap.json",
+  "mixins": [
+    "MultiEntityBlockMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
