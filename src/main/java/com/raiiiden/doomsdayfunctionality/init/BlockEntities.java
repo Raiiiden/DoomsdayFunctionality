@@ -16,11 +16,9 @@ public class BlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Doomsday.MODID);
 
-    // Use DeferredRegister with late binding to make sure blocks are registered first
     public static final RegistryObject<BlockEntityType<DoomsdayBlockEntity>> GENERIC =
             BLOCK_ENTITIES.register("generic", () -> {
                 try {
-                    // Try to get blocks by registry name
                     Block atm = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("doomsdaydecoration", "atm"));
                     Block atm2 = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("doomsdaydecoration", "atm_2"));
 
@@ -42,7 +40,6 @@ public class BlockEntities {
                 }
             });
 
-    // Register this DeferredRegister to the event bus
     public static void register(IEventBus bus) {
         BLOCK_ENTITIES.register(bus);
     }
