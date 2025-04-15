@@ -1,5 +1,6 @@
 package com.raiiiden.doomsdayfunctionality.blockentity;
 
+import com.raiiiden.doomsdayfunctionality.config.DoomsdayCommonConfig;
 import com.raiiiden.doomsdayfunctionality.init.BlockEntities;
 import com.raiiiden.doomsdayfunctionality.menu.DoomsdayContainerMenu;
 import net.minecraft.core.BlockPos;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -62,6 +64,10 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void tryLoadLoot(Player player) {
+        ResourceLocation id = ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock());
+        boolean lootAllowed = id != null && DoomsdayCommonConfig.LOOT_ENABLED.get().contains(id.toString());
+        if (!lootAllowed) return;
+
         if (!filledFromLoot && level instanceof ServerLevel server && lootTable != null) {
             LootTable table = server.getServer().getLootData().getLootTable(lootTable);
 
