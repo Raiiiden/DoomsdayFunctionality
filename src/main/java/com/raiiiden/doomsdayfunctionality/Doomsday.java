@@ -22,6 +22,8 @@ public class Doomsday {
   public static final String MODID = "doomsday_functionality";
   public static final Logger LOGGER = LogManager.getLogger();
 
+  public static long GLOBAL_FORCE_REFRESH_ID = 0;
+
   public Doomsday() {
     LOGGER.info("Initializing Doomsday Functionality");
 

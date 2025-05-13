@@ -1,5 +1,6 @@
 package com.raiiiden.doomsdayfunctionality.blockentity;
 
+import com.raiiiden.doomsdayfunctionality.Doomsday;
 import com.raiiiden.doomsdayfunctionality.config.DoomsdayCommonConfig;
 import com.raiiiden.doomsdayfunctionality.init.BlockEntities;
 import com.raiiiden.doomsdayfunctionality.menu.DoomsdayContainerMenu;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
@@ -41,6 +41,8 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
     private boolean looted = false;
     private boolean filledFromLoot = false;
     private long lootSeed = 0L;
+    private long lastLootDay = -1L;
+    private long lastForceId = -1L;
     private ResourceLocation lootTable = new ResourceLocation("doomsday_functionality", "chests/atm");
 
     public DoomsdayBlockEntity(BlockPos pos, BlockState state) {
@@ -63,28 +65,42 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
         this.filledFromLoot = value;
     }
 
+    public void setLastLootDay(long day) {
+        this.lastLootDay = day;
+        setChanged();
+    }
+
     public void tryLoadLoot(Player player) {
-        ResourceLocation id = ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock());
-        boolean lootAllowed = id != null && DoomsdayCommonConfig.LOOT_ENABLED.get().contains(id.toString());
-        if (!lootAllowed) return;
+        if (!(level instanceof ServerLevel server)) return;
 
-        if (!filledFromLoot && level instanceof ServerLevel server && lootTable != null) {
-            LootTable table = server.getServer().getLootData().getLootTable(lootTable);
+        long currentDay = server.getDayTime() / 24000L;
+        int interval = DoomsdayCommonConfig.ATM_REFRESH_DAYS.get();
 
-            LootParams.Builder params = new LootParams.Builder(server)
-                    .withParameter(LootContextParams.ORIGIN, this.getBlockPos().getCenter())
-                    .withOptionalParameter(LootContextParams.THIS_ENTITY, player);
+        boolean forceRefresh = Doomsday.GLOBAL_FORCE_REFRESH_ID > lastForceId;
 
-            List<ItemStack> items = table.getRandomItems(params.create(LootContextParamSets.CHEST));
-
-            for (int i = 0; i < Math.min(lootHandler.getSlots(), items.size()); i++) {
-                lootHandler.setStackInSlot(i, items.get(i));
+        if (!forceRefresh && lastLootDay != -1) {
+            if (currentDay - lastLootDay < interval) {
+                return;
             }
-
-            filledFromLoot = true;
-            looted = false;
-            setChanged();
         }
+
+        LootTable table = server.getServer().getLootData().getLootTable(lootTable);
+
+        LootParams.Builder params = new LootParams.Builder(server)
+                .withParameter(LootContextParams.ORIGIN, this.getBlockPos().getCenter())
+                .withOptionalParameter(LootContextParams.THIS_ENTITY, player);
+
+        List<ItemStack> items = table.getRandomItems(params.create(LootContextParamSets.CHEST));
+
+        for (int i = 0; i < Math.min(lootHandler.getSlots(), items.size()); i++) {
+            lootHandler.setStackInSlot(i, items.get(i));
+        }
+
+        filledFromLoot = true;
+        looted = false;
+        lastLootDay = currentDay;
+        lastForceId = Doomsday.GLOBAL_FORCE_REFRESH_ID;
+        setChanged();
     }
 
     public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
@@ -98,6 +114,8 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
         tag.putBoolean("Looted", looted);
         tag.putBoolean("Filled", filledFromLoot);
         tag.putLong("Seed", lootSeed);
+        tag.putLong("LastLootDay", lastLootDay);
+        tag.putLong("LastForceId", lastForceId);
         if (lootTable != null) tag.putString("LootTable", lootTable.toString());
     }
 
@@ -108,6 +126,8 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
         looted = tag.getBoolean("Looted");
         filledFromLoot = tag.getBoolean("Filled");
         lootSeed = tag.getLong("Seed");
+        lastLootDay = tag.getLong("LastLootDay");
+        lastForceId = tag.getLong("LastForceId");
         if (tag.contains("LootTable")) {
             lootTable = new ResourceLocation(tag.getString("LootTable"));
         }
