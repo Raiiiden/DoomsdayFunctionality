@@ -43,7 +43,7 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
     private long lootSeed = 0L;
     private long lastLootDay = -1L;
     private long lastForceId = -1L;
-    private ResourceLocation lootTable = new ResourceLocation("doomsday_functionality", "chests/atm");
+    private ResourceLocation lootTable = new ResourceLocation("doomsday_functionality", "chests/generic");
 
     public DoomsdayBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.GENERIC.get(), pos, state);
@@ -69,12 +69,22 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
         this.lastLootDay = day;
         setChanged();
     }
+    public void setDefaultLootTableFromBlock() {
+        if (level != null && !filledFromLoot && (lootTable == null || lootTable.toString().equals("doomsday_functionality:chests/generic"))) {
+            ResourceLocation blockId = getBlockState().getBlock().builtInRegistryHolder().key().location();
+            if (blockId != null) {
+                this.lootTable = new ResourceLocation("doomsday_functionality", "chests/" + blockId.getPath());
+                Doomsday.LOGGER.debug("Auto-assigned loot table: {}", this.lootTable);
+            }
+        }
+    }
 
     public void tryLoadLoot(Player player) {
         if (!(level instanceof ServerLevel server)) return;
 
+        setDefaultLootTableFromBlock();
         long currentDay = server.getDayTime() / 24000L;
-        int interval = DoomsdayCommonConfig.ATM_REFRESH_DAYS.get();
+        int interval = DoomsdayCommonConfig.LOOT_REFRESH_DAYS.get();
 
         boolean forceRefresh = Doomsday.GLOBAL_FORCE_REFRESH_ID > lastForceId;
 
@@ -85,6 +95,10 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
         }
 
         LootTable table = server.getServer().getLootData().getLootTable(lootTable);
+        if (table == LootTable.EMPTY) {
+            Doomsday.LOGGER.warn("Loot table {} not found!", lootTable);
+            return;
+        }
 
         LootParams.Builder params = new LootParams.Builder(server)
                 .withParameter(LootContextParams.ORIGIN, this.getBlockPos().getCenter())
@@ -157,7 +171,7 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("ATM");
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     @Override

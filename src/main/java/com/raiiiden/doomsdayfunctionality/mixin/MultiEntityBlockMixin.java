@@ -44,12 +44,12 @@ public abstract class MultiEntityBlockMixin extends Block implements EntityBlock
                                  Player player, InteractionHand hand, BlockHitResult hit) {
         if (!level.isClientSide) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof DoomsdayBlockEntity atmBe) {
-                atmBe.tryLoadLoot(player); // loot is refreshed before checking if empty
+            if (be instanceof DoomsdayBlockEntity lootBe) {
+                lootBe.tryLoadLoot(player); // loot is refreshed before checking if empty
 
                 boolean isEmpty = true;
-                for (int i = 0; i < atmBe.getLootHandler().getSlots(); i++) {
-                    if (!atmBe.getLootHandler().getStackInSlot(i).isEmpty()) {
+                for (int i = 0; i < lootBe.getLootHandler().getSlots(); i++) {
+                    if (!lootBe.getLootHandler().getStackInSlot(i).isEmpty()) {
                         isEmpty = false;
                         break;
                     }
@@ -60,7 +60,7 @@ public abstract class MultiEntityBlockMixin extends Block implements EntityBlock
                     return InteractionResult.CONSUME;
                 }
 
-                NetworkHooks.openScreen((ServerPlayer) player, atmBe, pos);
+                NetworkHooks.openScreen((ServerPlayer) player, lootBe, pos);
             }
         }
         return InteractionResult.SUCCESS;
