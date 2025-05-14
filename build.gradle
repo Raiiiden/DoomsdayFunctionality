@@ -138,7 +138,7 @@ repositories {
 
 dependencies {
     minecraft "net.neoforged:forge:${mc_version}-${neo_version}"
-    implementation fg.deobf("curse.maven:doomsday-decoration-1180487:6366037")
+    implementation fg.deobf("curse.maven:doomsday-decoration-1180487:6512669")
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 2, "max": 5 },
+      "entries": [
+        { "type": "item", "name": "minecraft:bread", "weight": 10 },
+        { "type": "item", "name": "minecraft:cooked_beef", "weight": 6 },
+        { "type": "item", "name": "minecraft:cooked_chicken", "weight": 6 },
+        { "type": "item", "name": "minecraft:cookie", "weight": 4 },
+        { "type": "item", "name": "minecraft:sweet_berries", "weight": 5 },
+        { "type": "item", "name": "minecraft:apple", "weight": 5 },
+        { "type": "item", "name": "minecraft:milk_bucket", "weight": 3 },
+        { "type": "item", "name": "minecraft:honey_bottle", "weight": 2 },
+        { "type": "item", "name": "minecraft:water_bucket", "weight": 3 },
+        { "type": "item", "name": "minecraft:beetroot_soup", "weight": 1 },
+        { "type": "item", "name": "minecraft:mushroom_stew", "weight": 1 },
+        { "type": "item", "name": "minecraft:carrot", "weight": 4 },
+        { "type": "item", "name": "minecraft:potato", "weight": 4 },
+        { "type": "item", "name": "minecraft:paper", "weight": 2 },
+        { "type": "item", "name": "minecraft:glass_bottle", "weight": 2 },
+        { "type": "item", "name": "minecraft:rotten_flesh", "weight": 1 }
+      ]
+    }
+  ]
+}

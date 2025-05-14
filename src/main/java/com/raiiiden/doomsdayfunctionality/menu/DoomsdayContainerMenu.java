@@ -24,13 +24,16 @@ public class DoomsdayContainerMenu extends AbstractContainerMenu {
         int startX = 8;
         int backpackStartY = 18;
 
-        for (int col = 0; col < 9; col++) {
-            this.addSlot(new SlotItemHandler(handler, col, startX + col * 18, backpackStartY) {
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return false; // Disallow placing items into inv
-                }
-            });
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 9; col++) {
+                int index = row * 9 + col;
+                this.addSlot(new SlotItemHandler(handler, index, startX + col * 18, backpackStartY + row * 18) {
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return false;
+                    }
+                });
+            }
         }
 
         int inventoryStartY = backpackStartY + 66;
@@ -65,7 +68,7 @@ public class DoomsdayContainerMenu extends AbstractContainerMenu {
         ItemStack current = slot.getItem();
         ItemStack copy = current.copy();
 
-        int containerSlots = 9;
+        int containerSlots = 27;
 
         if (index < containerSlots) {
             if (!this.moveItemStackTo(current, containerSlots, this.slots.size(), true)) {

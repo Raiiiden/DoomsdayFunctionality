@@ -21,7 +21,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = {
         "net.mcreator.doomsdaydecoration.block.ATMBlock",
-        "net.mcreator.doomsdaydecoration.block.ATM2Block"
+        "net.mcreator.doomsdaydecoration.block.ATM2Block",
+        "net.mcreator.doomsdaydecoration.block.GoodsshelvesBlock",
+        "net.mcreator.doomsdaydecoration.block.Goodsshelves2Block",
+        "net.mcreator.doomsdaydecoration.block.Goodsshelves3Block",
+        "net.mcreator.doomsdaydecoration.block.Goodsshelves4Block",
+        "net.mcreator.doomsdaydecoration.block.Goodsshelves5Block",
+        "net.mcreator.doomsdaydecoration.block.Goodsshelves6Block"
 })
 public abstract class MultiEntityBlockMixin extends Block implements EntityBlock {
 

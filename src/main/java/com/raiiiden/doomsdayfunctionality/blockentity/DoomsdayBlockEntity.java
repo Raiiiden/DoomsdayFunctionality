@@ -26,12 +26,14 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
+import java.util.Collections;
+import java.util.stream.IntStream;
 
 import java.util.List;
 
 public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
 
-    private final ItemStackHandler lootHandler = new ItemStackHandler(9) {
+    private final ItemStackHandler lootHandler = new ItemStackHandler(27) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -85,13 +87,10 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
         setDefaultLootTableFromBlock();
         long currentDay = server.getDayTime() / 24000L;
         int interval = DoomsdayCommonConfig.LOOT_REFRESH_DAYS.get();
-
         boolean forceRefresh = Doomsday.GLOBAL_FORCE_REFRESH_ID > lastForceId;
 
-        if (!forceRefresh && lastLootDay != -1) {
-            if (currentDay - lastLootDay < interval) {
-                return;
-            }
+        if (!forceRefresh && lastLootDay != -1 && currentDay - lastLootDay < interval) {
+            return;
         }
 
         LootTable table = server.getServer().getLootData().getLootTable(lootTable);
@@ -106,8 +105,13 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
 
         List<ItemStack> items = table.getRandomItems(params.create(LootContextParamSets.CHEST));
 
-        for (int i = 0; i < Math.min(lootHandler.getSlots(), items.size()); i++) {
-            lootHandler.setStackInSlot(i, items.get(i));
+        List<Integer> slots = new java.util.ArrayList<>(IntStream.range(0, lootHandler.getSlots())
+                .boxed()
+                .toList());
+        Collections.shuffle(slots, new java.util.Random(server.getRandom().nextLong()));
+
+        for (int i = 0; i < Math.min(slots.size(), items.size()); i++) {
+            lootHandler.setStackInSlot(slots.get(i), items.get(i));
         }
 
         filledFromLoot = true;
