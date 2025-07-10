@@ -9,17 +9,17 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:bread",
+          "name": "minecraft:bucket",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:iron_nugget",
           "weight": 2
         },
         {
           "type": "item",
-          "name": "minecraft:book",
-          "weight": 2
-        },
-        {
-          "type": "item",
-          "name": "minecraft:leather",
+          "name": "minecraft:water_bucket",
           "weight": 1
         }
       ]

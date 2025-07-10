@@ -9,17 +9,17 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:bread",
+          "name": "minecraft:gold_nugget",
+          "weight": 4
+        },
+        {
+          "type": "item",
+          "name": "minecraft:paper",
           "weight": 2
         },
         {
           "type": "item",
-          "name": "minecraft:book",
-          "weight": 2
-        },
-        {
-          "type": "item",
-          "name": "minecraft:leather",
+          "name": "minecraft:emerald",
           "weight": 1
         }
       ]

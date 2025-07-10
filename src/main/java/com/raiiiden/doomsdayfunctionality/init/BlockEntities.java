@@ -2,6 +2,7 @@ package com.raiiiden.doomsdayfunctionality.init;
 
 import com.raiiiden.doomsdayfunctionality.Doomsday;
 import com.raiiiden.doomsdayfunctionality.blockentity.DoomsdayBlockEntity;
+import com.raiiiden.doomsdayfunctionality.util.LootableBlocks;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -11,6 +12,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
+import java.util.Objects;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Doomsday.MODID)
 public class BlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -19,19 +23,19 @@ public class BlockEntities {
     public static final RegistryObject<BlockEntityType<DoomsdayBlockEntity>> GENERIC =
             BLOCK_ENTITIES.register("generic", () -> {
                 try {
-                    Block atm = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("doomsdaydecoration", "atm"));
-                    Block atm2 = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("doomsdaydecoration", "atm_2"));
+                    List<Block> blocksToRegister = LootableBlocks.LOOTABLE_BLOCK_RLS.stream()
+                            .map(ForgeRegistries.BLOCKS::getValue)
+                            .filter(Objects::nonNull)
+                            .collect(java.util.ArrayList::new, java.util.ArrayList::add, java.util.ArrayList::addAll);
 
-                    if (atm == null || atm2 == null) {
-                        Doomsday.LOGGER.error("ATM blocks not found during BlockEntityType registration");
-                        Doomsday.LOGGER.error("ATM: {}", atm);
-                        Doomsday.LOGGER.error("ATM2: {}", atm2);
+                    if (blocksToRegister.isEmpty()) {
+                        Doomsday.LOGGER.error("No valid blocks found for BlockEntityType registration. The generic block entity will not be associated with any blocks.");
                         return BlockEntityType.Builder.<DoomsdayBlockEntity>of(DoomsdayBlockEntity::new)
                                 .build(null);
                     }
 
-                    Doomsday.LOGGER.info("Registering BlockEntityType for ATM blocks");
-                    return BlockEntityType.Builder.of(DoomsdayBlockEntity::new, atm, atm2)
+                    Doomsday.LOGGER.info("Registering BlockEntityType for {} blocks.", blocksToRegister.size());
+                    return BlockEntityType.Builder.of(DoomsdayBlockEntity::new, blocksToRegister.toArray(new Block[0]))
                             .build(null);
                 } catch (Exception e) {
                     Doomsday.LOGGER.error("Error registering BlockEntityType", e);

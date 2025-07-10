@@ -9,17 +9,17 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:bread",
-          "weight": 2
-        },
-        {
-          "type": "item",
           "name": "minecraft:book",
+          "weight": 3
+        },
+        {
+          "type": "item",
+          "name": "minecraft:paper",
           "weight": 2
         },
         {
           "type": "item",
-          "name": "minecraft:leather",
+          "name": "minecraft:feather",
           "weight": 1
         }
       ]

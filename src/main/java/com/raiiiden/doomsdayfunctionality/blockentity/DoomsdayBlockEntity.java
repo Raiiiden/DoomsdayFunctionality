@@ -93,9 +93,18 @@ public class DoomsdayBlockEntity extends BlockEntity implements MenuProvider {
             return;
         }
 
+        for (int i = 0; i < lootHandler.getSlots(); i++) {
+            lootHandler.setStackInSlot(i, ItemStack.EMPTY);
+        }
+
         LootTable table = server.getServer().getLootData().getLootTable(lootTable);
         if (table == LootTable.EMPTY) {
             Doomsday.LOGGER.warn("Loot table {} not found!", lootTable);
+            filledFromLoot = true;
+            looted = false;
+            lastLootDay = currentDay;
+            lastForceId = Doomsday.GLOBAL_FORCE_REFRESH_ID;
+            setChanged();
             return;
         }
 

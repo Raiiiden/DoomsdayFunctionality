@@ -2,11 +2,26 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "rolls": 1,
+      "rolls": {
+        "min": 2,
+        "max": 3
+      },
       "entries": [
-        { "type": "item", "name": "minecraft:emerald", "weight": 1 },
-        { "type": "item", "name": "minecraft:gold_ingot", "weight": 2 },
-        { "type": "item", "name": "minecraft:iron_ingot", "weight": 3 }
+        {
+          "type": "item",
+          "name": "minecraft:paper",
+          "weight": 3
+        },
+        {
+          "type": "item",
+          "name": "minecraft:gold_nugget",
+          "weight": 2
+        },
+        {
+          "type": "item",
+          "name": "minecraft:iron_nugget",
+          "weight": 1
+        }
       ]
     }
   ]

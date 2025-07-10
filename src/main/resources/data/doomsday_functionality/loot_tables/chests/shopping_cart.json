@@ -4,22 +4,22 @@
     {
       "rolls": {
         "min": 2,
-        "max": 3
+        "max": 4
       },
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:bread",
+          "name": "minecraft:iron_ingot",
           "weight": 2
         },
         {
           "type": "item",
-          "name": "minecraft:book",
+          "name": "minecraft:paper",
           "weight": 2
         },
         {
           "type": "item",
-          "name": "minecraft:leather",
+          "name": "minecraft:apple",
           "weight": 1
         }
       ]
